@@ -4,6 +4,7 @@ import { ref, computed, defineProps } from "vue";
 import { defineAsyncComponent } from "vue";
 const Item = defineAsyncComponent(() => import("../components/Item.vue"));
 const Search = defineAsyncComponent(() => import("../components/Search.vue"));
+const AddCard = defineAsyncComponent(() => import("../components/AddCard.vue"));
 
 const props = defineProps({
   endpoint: String,
@@ -31,12 +32,14 @@ const filterItems = (props) => {
 </script>
 <template>
   <Search
+    label="Search Database..."
     :items="items"
     :endpoint="endpoint"
     @searchQuery="(props) => filterItems(props)"
   />
   <v-infinite-scroll height="400" @load="load">
     <div class="listWrapper">
+      <AddCard :endpoint="endpoint" />
       <template v-for="(item, index) in filteredItems" :key="item._id">
         <Item :item="item" :endpoint="endpoint" />
       </template>
