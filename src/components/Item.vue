@@ -2,7 +2,7 @@
 import axios from "axios";
 import { defineProps } from "vue";
 import { defineAsyncComponent } from "vue";
-const Item = defineAsyncComponent(() => import("../components/Item.vue"));
+const Modal = defineAsyncComponent(() => import("../components/Modal.vue"));
 
 const props = defineProps({
   item: Object,
@@ -10,8 +10,14 @@ const props = defineProps({
 });
 
 const { item, endpoint } = props;
-console.log("item", item);
-console.log("endpoint", endpoint);
+console.log("item._id", item._id);
+
+const deleteItem = async () => {
+  await axios
+    .delete(`${endpoint}/${item._id}`)
+    .then(({ data }) => data)
+    .catch((err) => console.log("err", err.response));
+};
 </script>
 
 <template>
@@ -40,9 +46,18 @@ console.log("endpoint", endpoint);
     </v-card-text>
 
     <v-card-actions>
-      <v-btn color="orange"> Share </v-btn>
-
-      <v-btn color="orange"> Explore </v-btn>
+      <Modal :item="item" verbiage="Edit" />
+      <v-row justify="center">
+        <v-btn color="primary" variant="text" @click="deleteItem">
+          Delete
+        </v-btn>
+      </v-row>
     </v-card-actions>
   </v-card>
 </template>
+
+<style scoped>
+.v-row {
+  margin: 0;
+}
+</style>
