@@ -4,6 +4,12 @@ import { ref, computed, defineProps } from "vue";
 import { defineAsyncComponent } from "vue";
 const Item = defineAsyncComponent(() => import("../components/Item.vue"));
 const Search = defineAsyncComponent(() => import("../components/Search.vue"));
+const BookForm = defineAsyncComponent(() =>
+  import("../components/forms/BookForm.vue")
+);
+const AuthorForm = defineAsyncComponent(() =>
+  import("../components/forms/AuthorForm.vue")
+);
 
 const props = defineProps({
   item: Object,
@@ -11,14 +17,19 @@ const props = defineProps({
   verbiage: String,
 });
 
-const { endpoint } = props;
+const { item, endpoint } = props;
 
 let dialog = ref(false);
+let name = ref(item ? item?.name : "");
+let title = ref(item ? item?.title : "");
+let topic = ref(item ? item?.topic : "");
+let authors = ref(item ? item?.authors : []);
+let location = ref(item ? item?.topic : "");
 </script>
 
 <template>
   <v-row justify="center">
-    <v-dialog v-model="dialog" persistent width="1024">
+    <v-dialog v-model="dialog" persistent width="600">
       <template v-slot:activator="{ props }">
         <v-btn color="primary" v-bind="props">
           {{ verbiage }}
@@ -27,63 +38,24 @@ let dialog = ref(false);
       <v-card>
         <v-card-title>
           <span class="text-h5"
-            >{{ verbiage }} {{ item.name || item.title }}</span
+            >{{ verbiage }}
+            {{
+              endpoint === "/api/books" && verbiage === "Create"
+                ? "a new book"
+                : endpoint === "/api/authors" && verbiage === "Create"
+                ? "a new author"
+                : null
+            }}
+            {{ item?.name || item?.title }}</span
           >
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-row>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field label="Legal first name*" required></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal middle name"
-                  hint="example of helper text only on focus"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6" md="4">
-                <v-text-field
-                  label="Legal last name*"
-                  hint="example of persistent helper text"
-                  persistent-hint
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field label="Email*" required></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  label="Password*"
-                  type="password"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-select
-                  :items="['0-17', '18-29', '30-54', '54+']"
-                  label="Age*"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12" sm="6">
-                <v-autocomplete
-                  :items="[
-                    'Skiing',
-                    'Ice hockey',
-                    'Soccer',
-                    'Basketball',
-                    'Hockey',
-                    'Reading',
-                    'Writing',
-                    'Coding',
-                    'Basejump',
-                  ]"
-                  label="Interests"
-                  multiple
-                ></v-autocomplete>
-              </v-col>
+            <v-row v-if="endpoint === '/api/books'">
+              <BookForm :endpoint="endpoint" />
+            </v-row>
+            <v-row v-else>
+              <AuthorForm :endpoint="endpoint" />
             </v-row>
           </v-container>
           <small>*indicates required field</small>
