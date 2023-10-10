@@ -1,15 +1,22 @@
+<script setup>
+import { defineAsyncComponent } from "vue";
+const List = defineAsyncComponent(() => import("../components/List.vue"));
+const Spinner = defineAsyncComponent(() => import("../components/Spinner.vue"));
+</script>
+
 <template>
-  <div class="books">
-    <h1>Books page</h1>
-  </div>
+  <Suspense>
+    <template #default>
+      <List endpoint="/api/books" />
+    </template>
+    <template #fallback><Spinner /></template>
+  </Suspense>
 </template>
 
 <style>
-@media (min-width: 1024px) {
-  .books {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+.books {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
 }
 </style>
