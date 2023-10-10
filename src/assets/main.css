@@ -28,6 +28,7 @@ a,
   }
 
   #app {
-    padding: 2rem 4rem;
+    max-width: 1000px;
+    padding: 2rem;
   }
 }

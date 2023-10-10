@@ -46,7 +46,7 @@ const deleteItem = async () => {
     </v-card-text>
 
     <v-card-actions>
-      <Modal :item="item" verbiage="Edit" />
+      <Modal :item="item" verbiage="Edit" :endpoint="endpoint" />
       <v-row justify="center">
         <v-btn color="primary" variant="text" @click="deleteItem">
           Delete

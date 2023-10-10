@@ -3,6 +3,7 @@ import { defineProps } from "vue";
 const emit = defineEmits(["searchQuery"]);
 
 const props = defineProps({
+  label: String,
   items: Array,
   endpoint: String,
 });
@@ -38,7 +39,7 @@ const customFilter = (itemTitle, queryText, item) => {
 <template>
   <v-autocomplete
     clearable
-    label="Search database..."
+    :label="label"
     :items="items"
     :custom-filter="customFilter"
     variant="solo-filled"
