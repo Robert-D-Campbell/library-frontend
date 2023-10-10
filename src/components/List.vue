@@ -16,10 +16,8 @@ const items = await axios
   .get(endpoint)
   .then(({ data }) => data)
   .catch((err) => console.log("err", err.response));
-// console.log("items", items);
 
 let query = null;
-// console.log("query", query);
 let filteredItems = ref(items);
 const filterItems = (props) => {
   console.log("props", props);
@@ -30,12 +28,6 @@ const filterItems = (props) => {
   );
   console.log("filteredItems", filteredItems);
 };
-// console.log('props', props)
-// console.log("itemTitle", itemTitle);
-// console.log("nameAndTitle", nameAndTitle);
-// console.log("authorsAndBooks", authorsAndBooks);
-// console.log("searchText", searchText);
-// console.log("item", item);
 </script>
 <template>
   <Search
