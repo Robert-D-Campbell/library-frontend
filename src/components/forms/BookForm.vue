@@ -11,6 +11,7 @@ const AddCard = defineAsyncComponent(() =>
 );
 
 const props = defineProps({
+  book: Object,
   item: Object,
   endpoint: String,
 });
@@ -34,6 +35,7 @@ console.log("authors", authors);
       endpoint="/api/authors"
       :addMultiple="true"
       @searchQuery="(props) => filterItems(props)"
+      :book="book"
     />
   </v-col>
   <v-col cols="12" sm="6" md="6">
