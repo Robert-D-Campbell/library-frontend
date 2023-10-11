@@ -1,6 +1,6 @@
 <template>
   <v-layout>
-    <v-navigation-drawer expand-on-hover rail>
+    <v-navigation-drawer expand-on-hover rail permanent>
       <v-list>
         <v-list-item
           prepend-avatar="https://randomuser.me/api/portraits/women/85.jpg"
@@ -34,7 +34,5 @@
         ></RouterLink>
       </v-list>
     </v-navigation-drawer>
-
-    <v-main style="height: 250px"></v-main>
   </v-layout>
 </template>

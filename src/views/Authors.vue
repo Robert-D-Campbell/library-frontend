@@ -1,15 +1,21 @@
-<template>
-  <div class="authors">
-    <h1>Authors page</h1>
-  </div>
-</template>
+<script setup>
+import { defineAsyncComponent } from "vue";
+const List = defineAsyncComponent(() => import("../components/List.vue"));
+const Spinner = defineAsyncComponent(() => import("../components/Spinner.vue"));
+</script>
 
+<template>
+  <Suspense>
+    <template #default>
+      <List endpoint="/api/authors" />
+    </template>
+    <template #fallback><Spinner /></template>
+  </Suspense>
+</template>
 <style>
-@media (min-width: 1024px) {
-  .authors {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
+.authors {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
 }
 </style>
