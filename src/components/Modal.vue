@@ -1,6 +1,6 @@
 <script setup async>
 import axios from "axios";
-import { ref, computed, defineProps } from "vue";
+import { ref, defineProps } from "vue";
 import { defineAsyncComponent } from "vue";
 const Item = defineAsyncComponent(() => import("../components/Item.vue"));
 const Search = defineAsyncComponent(() => import("../components/Search.vue"));
@@ -10,6 +10,7 @@ const BookForm = defineAsyncComponent(() =>
 const AuthorForm = defineAsyncComponent(() =>
   import("../components/forms/AuthorForm.vue")
 );
+const emit = defineEmits(["refetch"]);
 
 const props = defineProps({
   item: Object,
@@ -17,7 +18,7 @@ const props = defineProps({
   verbiage: String,
 });
 
-const { item, endpoint } = props;
+const { item, endpoint, verbiage } = props;
 
 let dialog = ref(false);
 
@@ -25,7 +26,7 @@ let book = ref({
   title: item ? item?.title : "",
   topic: item ? item?.topic : "",
   authors: item ? item?.authors : [],
-  items: item ? item?.topic : "",
+  location: item ? item?.location : "",
 });
 let author = ref({
   name: item ? item?.name : "",
@@ -33,12 +34,44 @@ let author = ref({
 });
 
 const save = async () => {
-  console.log("author", author.value.name);
-  console.log("SAVED");
-  await axios
-    .post(`${endpoint}/create`, { name: author.value.name })
-    .then(({ data }) => data)
-    .catch((err) => console.log("err", err.response));
+  if (verbiage === "Create") {
+    endpoint === "/api/authors"
+      ? await axios
+          .post(`${endpoint}/create`, {
+            name: author.value.name,
+            books: author.value.books !== [] && author.value.books,
+          })
+          .then(({ data }) => data)
+          .catch((err) => console.log("err", err.response))
+      : await axios
+          .post(`${endpoint}/create`, {
+            title: book.value.title,
+            authors: book.value.books !== [] && book.value.authors,
+            topic: book.value.topic,
+            location: book.value.location,
+          })
+          .then(({ data }) => data)
+          .catch((err) => console.log("err", err.response));
+  } else {
+    endpoint === "/api/authors"
+      ? await axios
+          .patch(`${endpoint}/${item._id}`, {
+            name: author.value.name,
+            books: author.value.books !== [] && author.value.books,
+          })
+          .then(({ data }) => data)
+          .catch((err) => console.log("err", err.response))
+      : await axios
+          .patch(`${endpoint}/${item._id}`, {
+            title: book.value.title,
+            authors: book.value.books !== [] && book.value.authors,
+            topic: book.value.topic,
+            location: book.value.location,
+          })
+          .then(({ data }) => data)
+          .catch((err) => console.log("err", err.response));
+  }
+  dialog.value = false;
 };
 </script>
 

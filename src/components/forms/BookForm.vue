@@ -16,30 +16,40 @@ const props = defineProps({
   endpoint: String,
 });
 
-const { endpoint } = props;
+const { book, endpoint } = props;
 
 const authors = await axios
   .get("/api/authors")
   .then(({ data }) => data)
   .catch((err) => console.log("err", err.response));
 console.log("authors", authors);
+console.log("book", book);
 </script>
 <template>
   <v-col cols="12" sm="6" md="6">
-    <v-text-field label="Title*" required></v-text-field>
+    <v-text-field
+      @change="(e) => (book.title = e.target.value)"
+      label="Title*"
+      v-model="book.title"
+      required
+    ></v-text-field>
   </v-col>
   <v-col cols="12" sm="6" md="6">
-    <Search
+    <v-combobox
+      chips
+      multiple
       label="Authors"
       :items="authors"
-      endpoint="/api/authors"
-      :addMultiple="true"
-      @searchQuery="(props) => filterItems(props)"
-      :book="book"
-    />
+      auto-select-first
+      v-model="book.authors"
+      return-object
+      item-title="name"
+      required
+    ></v-combobox>
   </v-col>
   <v-col cols="12" sm="6" md="6">
-    <v-select
+    <v-combobox
+      label="Topic*"
       :items="[
         'Non-fiction',
         'Fiction',
@@ -61,14 +71,17 @@ console.log("authors", authors);
         'Fairy tale',
         'Autobiography',
       ]"
-      label="Topic*"
+      auto-select-first
+      v-model="book.topic"
       required
-    ></v-select>
+    ></v-combobox>
   </v-col>
   <v-col cols="12" sm="6" md="6">
     <v-text-field
       label="Location*"
       hint="Example: Bookshelf 1, Box 2, etc.."
+      v-model="book.location"
+      @change="(e) => (book.location = e.target.value)"
     ></v-text-field>
   </v-col>
 </template>

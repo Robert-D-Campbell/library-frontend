@@ -1,7 +1,6 @@
 <script setup async>
 import axios from "axios";
-import { ref, computed, defineProps } from "vue";
-import { defineAsyncComponent } from "vue";
+import { ref, defineProps, defineAsyncComponent } from "vue";
 const Item = defineAsyncComponent(() => import("../components/Item.vue"));
 const Search = defineAsyncComponent(() => import("../components/Search.vue"));
 const AddCard = defineAsyncComponent(() => import("../components/AddCard.vue"));
@@ -10,24 +9,31 @@ const props = defineProps({
   endpoint: String,
   required: true,
 });
-
 const { endpoint } = props;
 
-const items = await axios
+// declare items in setup so they're available in the dom right away
+let items = await axios
   .get(endpoint)
   .then(({ data }) => data)
   .catch((err) => console.log("err", err.response));
 
-let query = null;
+// filter list of rendered items
 let filteredItems = ref(items);
 const filterItems = (props) => {
-  console.log("props", props);
-  filteredItems.value = items.filter(
-    (filteredItem) =>
-      filteredItem.title?.includes(props.searchText) ||
-      filteredItem.name?.includes(props.searchText)
-  );
-  console.log("filteredItems", filteredItems);
+  filteredItems.value = items.filter((filteredItem) => {
+    let lowercaseTitle = filteredItem.title?.toLowerCase();
+    let lowercaseName = filteredItem.name?.toLowerCase();
+    let lowercaseTopic = filteredItem.topic?.toLowerCase();
+    if (
+      lowercaseTitle?.includes(props.searchText) ||
+      lowercaseName?.includes(props.searchText) ||
+      lowercaseTopic?.includes(props.searchText)
+    ) {
+      return true;
+    } else {
+      false;
+    }
+  });
 };
 </script>
 <template>
@@ -56,7 +62,5 @@ const filterItems = (props) => {
   flex-wrap: wrap;
   justify-content: start;
   align-content: center;
-  width: 100vw;
-  height: 100vh;
 }
 </style>

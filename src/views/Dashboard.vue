@@ -1,3 +1,4 @@
+<!-- TODO: Customize dashboard with personalized data, eventually make possible to login -->
 <template>
   <div class="dashboard">
     <h1>Dashboard page</h1>
