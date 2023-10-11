@@ -20,11 +20,26 @@ const props = defineProps({
 const { item, endpoint } = props;
 
 let dialog = ref(false);
-let name = ref(item ? item?.name : "");
-let title = ref(item ? item?.title : "");
-let topic = ref(item ? item?.topic : "");
-let authors = ref(item ? item?.authors : []);
-let location = ref(item ? item?.topic : "");
+
+let book = ref({
+  title: item ? item?.title : "",
+  topic: item ? item?.topic : "",
+  authors: item ? item?.authors : [],
+  items: item ? item?.topic : "",
+});
+let author = ref({
+  name: item ? item?.name : "",
+  books: item ? item?.books : [],
+});
+
+const save = async () => {
+  console.log("author", author.value.name);
+  console.log("SAVED");
+  await axios
+    .post(`${endpoint}/create`, { name: author.value.name })
+    .then(({ data }) => data)
+    .catch((err) => console.log("err", err.response));
+};
 </script>
 
 <template>
@@ -52,10 +67,10 @@ let location = ref(item ? item?.topic : "");
         <v-card-text>
           <v-container>
             <v-row v-if="endpoint === '/api/books'">
-              <BookForm :endpoint="endpoint" />
+              <BookForm :item="item" :endpoint="endpoint" :book="book" />
             </v-row>
             <v-row v-else>
-              <AuthorForm :endpoint="endpoint" />
+              <AuthorForm :item="item" :endpoint="endpoint" :author="author" />
             </v-row>
           </v-container>
           <small>*indicates required field</small>
@@ -65,7 +80,7 @@ let location = ref(item ? item?.topic : "");
           <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
             Close
           </v-btn>
-          <v-btn color="blue-darken-1" variant="text" @click="dialog = false">
+          <v-btn color="blue-darken-1" variant="text" @click="save">
             Save
           </v-btn>
         </v-card-actions>

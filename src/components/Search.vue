@@ -5,6 +5,7 @@ const emit = defineEmits(["searchQuery"]);
 const props = defineProps({
   label: String,
   items: Array,
+  addMultiple: Boolean,
   endpoint: String,
 });
 
@@ -38,6 +39,7 @@ const customFilter = (itemTitle, queryText, item) => {
 </script>
 <template>
   <v-autocomplete
+    :multiple="addMultiple"
     clearable
     :label="label"
     :items="items"
